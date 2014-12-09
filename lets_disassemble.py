@@ -94,6 +94,24 @@ z80_ddcbasm = [\
 "","","","","","","SET 4,(IX+d)","","","","","","","","SET 5,(IX+d)","", \
 "","","","","","","SET 6,(IX+d)","","","","","","","","SET 7,(IX+d)",""]
 
+z80_fdasm = [\
+"","","","","","","","","","ADD IY,BC","","","","","","", \
+"","","","","","","","","","ADD IY,DE","","","","","","", \
+"","LD IY,n'n","LD (n'n),IY","INC IY","","","","","","ADD IY,HL","LD IY,(n'n)","DEC IY","","","","", \
+"","","","","INC (IY+d)","DEC (IY+d)","LD (IY+d),n","","","ADD IY,SP","","","","","","", \
+"","","","","","","LD B,(IY+d)","","","","","","","","LD C,(IY+d)","", \
+"","","","","","","LD D,(IY+d)","","","","","","","","LD E,(IY+d)","", \
+"","","","","","","LD H,(IY+d)","","","","","","","","LD L,(IY+d)","", \
+"LD (IY+d),B","LD (IY+d),C","LD (IY+d),D","LD (IY+d),E","LD (IY+d),H","LD (IY+d),L","","LD (IY+d),A","","","","","","","LD A,(IY+d)","", \
+"","","","","","","ADD A,(IY+d)","","","","","","","","ADC A,(IY+d)","", \
+"","","","","","","SUB (IY+d)","","","","","","","","SBC A,(IY+d)","", \
+"","","","","","","AND (IY+d)","","","","","","","","XOR (IY+d)","", \
+"","","","","","","OR (IY+d)","","","","","","","","CP (IY+d)","", \
+"","","","","","","","","","","","FD-CB","","","","", \
+"","","","","","","","","","","","","","","","", \
+"","POP IY","","EX (SP),IY","","PUSH IY","","","","JP (IY)","","","","","","", \
+"","","","","","","","","","LD SP,IY","","","","","",""]
+
 z80_fdcbasm = [\
 "","","","","","","RLC (IY+d)","","","","","","","","RRC (IY+d)","", \
 "","","","","","","RL (IY+d)","","","","","","","","RR (IY+d)","", \
@@ -173,6 +191,14 @@ for l in range(100):
         code2_op  = z80_edasm[code2_num]
         print "code2_op:",code2_op
         asm_code = code2_op
+      elif code1 == "FD":
+        # FD CODE
+        code2 = strlist[3]
+        code2_num = int(code2, 16);
+        print "code2_num:",code2_num
+        code2_op  = z80_fdasm[code2_num]
+        print "code2_op:",code2_op
+        asm_code = code2_op
       else:
         code2 = strlist[3] + "H"
         print "code1:",code1
@@ -194,7 +220,19 @@ for l in range(100):
             code2_op  = z80_ddasm[code2_num]
             print "code2_op:",code2_op
             code3 = strlist[4] + "H"
-            code3_op  = code2_op.replace("d",code3)
+            code3_op  = code2_op.replace("d", "0" + code3)
+            print "code3_op:",code3_op
+            asm_code = code3_op
+
+         elif code1 == "FD":
+            # FD xx xx CODE
+            code2 = strlist[3]
+            code2_num = int(code2, 16);
+            print "code2_num:",code2_num
+            code2_op  = z80_fdasm[code2_num]
+            print "code2_op:",code2_op
+            code3 = strlist[4] + "H"
+            code3_op  = code2_op.replace("d","0" + code3)
             print "code3_op:",code3_op
             asm_code = code3_op
 
@@ -219,44 +257,48 @@ for l in range(100):
               code2_op = z80_edasm[code2_num]
               print "code2_op:",code2_op
               asm_code = code2_op.replace("n'n",code4 + code3 + "H")
+
 	 if code1 == "FD":
             if code2 == "CB":
               code4_num = int(code4, 16)
               print "code4_num:",code4_num
               code4_op = z80_fdcbasm[code4_num]
               print "code4_op:",code4_op
-              asm_code = code4_op.replace("d",code3 + "H")
+              asm_code = code4_op.replace("d","0" + code3 + "H")
+
+            elif code2 == "21" or code2 == "22" or code2 == "2A":
+              code2_num = int(code2, 16)
+              print "code2_num:",code2_num
+              code2_op = z80_fdasm[code2_num]
+              print "code2_op:",code2_op
+              asm_code = code2_op.replace("n'n",code4 + code3 + "H")
+
+            elif code2 == "36":
+              code2_num = int(code2, 16)
+              print "code2_num:",code2_num
+              code2_op = z80_fdasm[code2_num]
+              print "code2_op:",code2_op
+              asm_code = code2_op.replace("d", code3 + "H")
+              asm_code = asm_code.replace("n", code4 + "H")
+
 	 if code1 == "DD":
             if code2 == "CB":
               code4_num = int(code4, 16)
               print "code4_num:",code4_num
               code4_op = z80_ddcbasm[code4_num]
               print "code4_op:",code4_op
-              asm_code = code4_op.replace("d",code3 + "H")
+              asm_code = code4_op.replace("d", "0" + code3 + "H")
+
             else:
               code2_num = int(code2, 16)
               code2_op = z80_ddasm[code2_num]
               print "code2_op:",code2_op
-              asm_code = code2_op.replace("n",code3 + "H")
-              asm_code = asm_code.replace("d",code4 + "H")
+              asm_code = code2_op.replace("d", "0" + code3 + "H")
 
     print "asm_code:",asm_code 
     sendstr = asm_code + '\n'
     print "sendstr:",sendstr
-
     s.sendall(sendstr)
-
-recvstr = s.recv(4096)
-print "recvstr:",recvstr
-
-recvstr = s.recv(4096)
-print "recvstr:",recvstr
-
-recvstr = s.recv(4096)
-print "recvstr:",recvstr
-
-recvstr = s.recv(4096)
-print "recvstr:",recvstr
 
 recvstr = s.recv(4096)
 print "recvstr:",recvstr
