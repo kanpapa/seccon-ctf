@@ -221,8 +221,8 @@ for l in range(100):
             print "code2_op:",code2_op
             code3_num = int(strlist[4], 16)
             if code3_num > 127:
-               code3_num = ~code3_num + 257
-               code2_op  = code2_op.replace("+d", "-" + str(code3_num))
+               code3_num = -((code3_num - 1) ^ 0xFF)
+               code2_op  = code2_op.replace("+d", str(code3_num))
             else:
                code2_op  = code2_op.replace("d", str(code3_num))
             print "code2_op:",code2_op
@@ -237,8 +237,8 @@ for l in range(100):
             print "code2_op:",code2_op
             code3_num = int(strlist[4], 16)
             if code3_num > 127:
-               code3_num = ~code3_num + 257
-               code2_op  = code2_op.replace("+d", "-" + str(code3_num))
+               code3_num = -((code3_num - 1) ^ 0xFF)
+               code2_op  = code2_op.replace("+d", str(code3_num))
             else:
                code2_op  = code2_op.replace("d", str(code3_num))
             print "code2_op:",code2_op
@@ -274,8 +274,8 @@ for l in range(100):
               print "code4_op:",code4_op
               code3_num = int(code3, 16)
               if code3_num > 127:
-                 code3_num = ~code3_num + 257
-                 asm_code  = code4_op.replace("+d", "-" + str(code3_num))
+                 code3_num = -((code3_num - 1) ^ 0xFF)
+                 asm_code  = code4_op.replace("+d", str(code3_num))
               else:
                  asm_code  = code4_op.replace("d", str(code3_num))
 
@@ -292,9 +292,9 @@ for l in range(100):
               code2_op = z80_fdasm[code2_num]
               print "code2_op:",code2_op
               code3_num = int(code3, 16)
-              if code3_num > 127:
-                 code3_num = ~code3_num + 257
-                 asm_code  = code2_op.replace("+d", "-" + str(code3_num))
+              if code3_num > 127:  
+                 code3_num = -((code3_num - 1) ^ 0xFF)
+                 asm_code  = code2_op.replace("+d", str(code3_num))
               else:
                  asm_code  = code2_op.replace("d", str(code3_num))
               asm_code = asm_code.replace("n", code4 + "H")
@@ -307,8 +307,8 @@ for l in range(100):
               print "code4_op:",code4_op
               code3_num = int(code3, 16)
               if code3_num > 127:
-                 code3_num = ~code3_num + 257
-                 asm_code  = code4_op.replace("+d", "-" + str(code3_num))
+                 code3_num = -((code3_num - 1) ^ 0xFF)
+                 asm_code  = code4_op.replace("+d", str(code3_num))
               else:
                  asm_code  = code4_op.replace("d", str(code3_num))
             elif code2 == "21" or code2 == "22" or code2 == "2A":
@@ -324,8 +324,8 @@ for l in range(100):
               print "code2_op:",code2_op
               code3_num = int(code3, 16)
               if code3_num > 127:
-                 code3_num = ~code3_num + 257
-                 asm_code  = code2_op.replace("+d", "-" + str(code3_num))
+                 code3_num = -((code3_num - 1) ^ 0xFF)
+                 asm_code  = code2_op.replace("+d", str(code3_num))
               else:
                  asm_code  = code2_op.replace("d", str(code3_num))
 
